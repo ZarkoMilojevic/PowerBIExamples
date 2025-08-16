@@ -13,40 +13,75 @@
    - `deliveries[RouteID]` → `routes[RouteID]` (Many-to-One, Single)
    - `deliveries[DriverID]` → `drivers[DriverID]` (Many-to-One, Single)
 3. **Date table (DAX):**
-   ```DAX
-   Date = CALENDARAUTO()
-   ```
+```DAX
+Date =
+ADDCOLUMNS (
+    CALENDARAUTO(),
+    "Year", YEAR ( [Date] ),
+    "Month Number", MONTH ( [Date] ),
+    "Month", FORMAT ( [Date], "MMM" ),
+    "Year-Month", FORMAT ( [Date], "yyyy-MM" ),
+    "Quarter", "Q" & FORMAT ( [Date], "Q" )
+)
+```
    Mark it as Date table with `Date[Date]`.
+   
 4. Create relationships `routes[RouteDate]` → `Date[Date]` (if needed, set to Many-to-One).
 
 ## DAX Measures
 Create a measure table `Delivery Metrics` and add:
 
 ```DAX
-Total Deliveries = COUNTROWS(deliveries)
+Total Deliveries =
+COUNTROWS ( deliveries )
 
-Delivered = CALCULATE([Total Deliveries], deliveries[Status] = "Delivered")
+Delivered =
+CALCULATE (
+    [Total Deliveries],
+    deliveries[Status] = "Delivered"
+)
 
-On-Time Deliveries = 
-CALCULATE([Delivered], deliveries[LateFlag] = 0)
+On-Time Deliveries =
+CALCULATE (
+    [Total Deliveries],
+    deliveries[Status] = "Delivered",
+    deliveries[LateFlag] = 0
+)
 
-On-Time Rate % = DIVIDE([On-Time Deliveries], [Delivered])
+On-Time Rate % =
+DIVIDE ( [On-Time Deliveries], [Delivered] )
 
 Avg Delay (mins) =
-VAR Delayed =
-    FILTER(deliveries, deliveries[Status] = "Delivered" && deliveries[LateFlag] = 1)
-RETURN
-    AVERAGEX(Delayed, DATEDIFF(deliveries[PlannedDateTime], deliveries[ActualDateTime], MINUTE))
+CALCULATE (
+    AVERAGEX (
+        deliveries,
+        DATEDIFF ( deliveries[PlannedDateTime], deliveries[ActualDateTime], MINUTE )
+    ),
+    deliveries[Status] = "Delivered",
+    deliveries[LateFlag] = 1
+)
 
-Stops per Route = AVERAGEX(VALUES(routes[RouteID]), CALCULATE(DISTINCTCOUNT(deliveries[DeliveryID])))
+Stops per Route =
+AVERAGEX (
+    VALUES ( routes[RouteID] ),
+    CALCULATE ( DISTINCTCOUNT ( deliveries[DeliveryID] ) )
+)
 
-Km per Stop = DIVIDE(SUM(deliveries[DistanceKm]), [Delivered])
-
-SLA Breach % by Reason =
-DIVIDE(
-    CALCULATE([Delivered], deliveries[LateFlag] = 1),
+Km per Stop =
+DIVIDE (
+    SUM ( deliveries[DistanceKm] ),
     [Delivered]
 )
+
+SLA Breach % by Reason =
+DIVIDE (
+    CALCULATE (
+        [Delivered],
+        deliveries[LateFlag] = 1
+    ),
+    [Delivered]
+)
+
 ```
 
 _Optional calculated column (for convenience):_
