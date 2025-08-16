@@ -1,0 +1,21 @@
+VehicleID,VehicleType,Depot,FuelType,TargetLper100km
+V001,Box Truck,Toronto-East,Diesel,10.7
+V002,Box Truck,Toronto-East,Diesel,24.6
+V003,Box Truck,Montreal,Diesel,23.9
+V004,Box Truck,Montreal,Diesel,20.9
+V005,Tractor,Toronto-West,Gasoline,17.3
+V006,Tractor,Ottawa,Diesel,11.9
+V007,Van,Toronto-East,Diesel,18.6
+V008,Van,Toronto-East,Diesel,12.0
+V009,Van,Ottawa,Diesel,20.5
+V010,Van,Toronto-East,Diesel,14.9
+V011,Tractor,Montreal,Diesel,13.7
+V012,Tractor,Toronto-West,Gasoline,17.4
+V013,Box Truck,Ottawa,Gasoline,20.0
+V014,Tractor,Toronto-West,Gasoline,16.0
+V015,Box Truck,Toronto-East,Diesel,27.3
+V016,Box Truck,Ottawa,Gasoline,9.1
+V017,Tractor,Toronto-East,Gasoline,26.3
+V018,Van,Toronto-West,Diesel,9.0
+V019,Van,Toronto-West,Gasoline,13.1
+V020,Van,Montreal,Diesel,27.9
