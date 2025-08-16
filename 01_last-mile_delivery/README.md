@@ -29,7 +29,15 @@ ADDCOLUMNS (
 4. Create relationships `routes[RouteDate]` → `Date[Date]` (if needed, set to Many-to-One).
 
 ## DAX Measures
-Create a measure table `Delivery Metrics` and add:
+Create a measure table `Delivery Metrics`.
+```DAX
+'Delivery Metrics' =
+SELECTCOLUMNS(
+    { (0) },
+    "Placeholder", 0
+)
+```
+Then add:
 
 ```DAX
 Total Deliveries =
